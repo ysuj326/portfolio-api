@@ -1,21 +1,29 @@
-<?php
+#!/bin/sh
+set -e
 
-/**
- * Laravel - A PHP Framework For Web Artisans
- *
- * @package  Laravel
- * @author   Taylor Otwell <taylor@laravel.com>
- */
+echo "Deploying application ..."
 
-$uri = urldecode(
-    parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
-);
+# Enter maintenance mode
+(php artisan down --message 'The app is being (quickly!) updated. Please try again in a minute.') || true
+    # Update codebase
+    git fetch origin deploy
+    git reset --hard origin/deploy
 
-// This file allows us to emulate Apache's "mod_rewrite" functionality from the
-// built-in PHP web server. This provides a convenient way to test a Laravel
-// application without having installed a "real" web server software here.
-if ($uri !== '/' && file_exists(__DIR__.'/public'.$uri)) {
-    return false;
-}
+    # Install dependencies based on lock file
+    composer install --no-interaction --prefer-dist --optimize-autoloader
 
-require_once __DIR__.'/public/index.php';
+    # Migrate database
+    php artisan migrate --force
+
+    # Note: If you're using queue workers, this is the place to restart them.
+    # ...
+
+    # Clear cache
+    php artisan optimize
+
+    # Reload PHP to update opcache
+    echo "" | sudo -S service php7.4-fpm reload
+# Exit maintenance mode
+php artisan up
+
+echo "Application deployed!"
