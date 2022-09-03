@@ -19,9 +19,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+Route::get('/me', function () {
+    return [
+        '강아아아??'
+    ];
+});
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::get('me', function () {
+    Route::get('/me', function () {
         return [
             '강아아아'
         ];
