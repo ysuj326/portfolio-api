@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next export"
   },
   "dependencies": {
     "eslint": "8.30.0",
@@ -14,5 +15,9 @@
     "next": "13.0.7",
     "react": "18.2.0",
     "react-dom": "18.2.0"
+  },
+  "homepage": "http://ysuj326.github.io/portfolio-api",
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
   }
 }
